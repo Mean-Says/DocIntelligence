@@ -1,4 +1,23 @@
 services:
+  # ── Frontend Next.js ──────────────────────────────────────────────
+  web:
+    build:
+      context: ./web
+      args:
+        API_URL: http://api:8000
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+    ports:
+      - "3000:3000"
+    environment:
+      API_URL: http://api:8000
+      PLAYGROUND_API_KEY: ${PLAYGROUND_API_KEY}
+      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY}
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  # ── API FastAPI ───────────────────────────────────────────────────
   api:
     build: .
     ports:
@@ -9,10 +28,10 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    volumes:
-      - ./app:/app/app  # hot reload em dev
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    restart: unless-stopped
 
+  # ── Worker ARQ ────────────────────────────────────────────────────
   worker:
     build: .
     env_file: .env
@@ -22,15 +41,15 @@ services:
       redis:
         condition: service_healthy
     command: python -m arq app.workers.arq_settings.WorkerSettings
+    restart: unless-stopped
 
+  # ── Banco de dados ────────────────────────────────────────────────
   db:
     image: postgres:16-alpine
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-docintel}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-docintel}
       POSTGRES_DB: ${POSTGRES_DB:-docintelligence}
-    ports:
-      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -38,11 +57,11 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
 
+  # ── Redis ─────────────────────────────────────────────────────────
   redis:
     image: redis:7-alpine
-    ports:
-      - "6379:6379"
     volumes:
       - redisdata:/data
     healthcheck:
@@ -50,6 +69,21 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+    restart: unless-stopped
+
+  # ── nginx (reverse proxy + SSL) ───────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+    depends_on:
+      - web
+      - api
+    restart: unless-stopped
 
 volumes:
   pgdata:
