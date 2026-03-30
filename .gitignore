@@ -1,0 +1,75 @@
+# Ambiente
+.env
+.env.dev
+.env.*.local
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+
+# Testes e cobertura
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+.hypothesis/
+
+# Linters
+.ruff_cache/
+.mypy_cache/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Banco de dados local
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+
+# Storage local (PDFs de teste, não vai pro repo)
+local_storage/
+
+# Logs
+*.log
+logs/
+
+# Docker override local
+docker-compose.override.yml
+
+# Alembic (gerado automaticamente)
+alembic/__pycache__/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Temporários
+tmp/
+temp/
+*.tmp

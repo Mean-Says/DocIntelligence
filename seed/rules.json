@@ -1,0 +1,122 @@
+[
+  {
+    "doc_type": "nfe",
+    "field_name": "cnpj_emitente",
+    "scope": "global",
+    "pattern": "CNPJ[:\\s]+([\\d]{2}[\\.]?[\\d]{3}[\\.]?[\\d]{3}[\\/]?[\\d]{4}[-]?[\\d]{2})",
+    "capture_group": 1,
+    "normalizer": "digits_only",
+    "priority": 10,
+    "confidence_baseline": 0.92,
+    "origin": "handcrafted",
+    "comment": "CNPJ do emitente após label 'CNPJ:'"
+  },
+  {
+    "doc_type": "nfe",
+    "field_name": "cnpj_destinatario",
+    "scope": "global",
+    "pattern": "Destinat[aá]rio.*?CNPJ[:\\s]+([\\d]{2}[\\.]?[\\d]{3}[\\.]?[\\d]{3}[\\/]?[\\d]{4}[-]?[\\d]{2})",
+    "capture_group": 1,
+    "normalizer": "digits_only",
+    "priority": 10,
+    "confidence_baseline": 0.88,
+    "origin": "handcrafted",
+    "comment": "CNPJ do destinatário na seção Destinatário"
+  },
+  {
+    "doc_type": "nfe",
+    "field_name": "valor_total",
+    "scope": "global",
+    "pattern": "Valor\\s+Total\\s+da\\s+Nota[:\\s]+R?\\$?\\s*([\\d]+[\\.,][\\d]{2})",
+    "capture_group": 1,
+    "normalizer": "currency_brl",
+    "priority": 10,
+    "confidence_baseline": 0.90,
+    "origin": "handcrafted",
+    "comment": "Valor total da NF-e"
+  },
+  {
+    "doc_type": "nfe",
+    "field_name": "numero_nf",
+    "scope": "global",
+    "pattern": "N[Úú]MERO\\s*[:\\s]+(\\d{1,9})",
+    "capture_group": 1,
+    "normalizer": "strip",
+    "priority": 10,
+    "confidence_baseline": 0.93,
+    "origin": "handcrafted",
+    "comment": "Número da NF-e"
+  },
+  {
+    "doc_type": "nfe",
+    "field_name": "data_emissao",
+    "scope": "global",
+    "pattern": "Data(?:\\s+\\w+)*[:\\s]+(\\d{2}[\\/-]\\d{2}[\\/-]\\d{4})",
+    "capture_group": 1,
+    "normalizer": "date_iso",
+    "priority": 10,
+    "confidence_baseline": 0.91,
+    "origin": "handcrafted",
+    "comment": "Data de emissão da NF-e"
+  },
+  {
+    "doc_type": "curriculo",
+    "field_name": "email",
+    "scope": "global",
+    "pattern": "([a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,})",
+    "capture_group": 1,
+    "normalizer": "strip",
+    "priority": 10,
+    "confidence_baseline": 0.97,
+    "origin": "handcrafted",
+    "comment": "Email — padrão universal"
+  },
+  {
+    "doc_type": "curriculo",
+    "field_name": "telefone",
+    "scope": "global",
+    "pattern": "(?:Tel(?:efone)?|Fone|Celular|WhatsApp)[:\\s]*([\\(\\d][\\d\\s\\(\\)\\-\\.]{8,})",
+    "capture_group": 1,
+    "normalizer": "digits_only",
+    "priority": 10,
+    "confidence_baseline": 0.88,
+    "origin": "handcrafted",
+    "comment": "Telefone/celular com label"
+  },
+  {
+    "doc_type": "conta_luz",
+    "field_name": "valor_total",
+    "scope": "global",
+    "pattern": "(?:Valor\\s+a\\s+Pagar|Total\\s+a\\s+Pagar|VALOR\\s+TOTAL)[:\\s]*R?\\$?\\s*([\\d]+[\\.,][\\d]{2})",
+    "capture_group": 1,
+    "normalizer": "currency_brl",
+    "priority": 10,
+    "confidence_baseline": 0.89,
+    "origin": "handcrafted",
+    "comment": "Valor total da conta de energia"
+  },
+  {
+    "doc_type": "conta_luz",
+    "field_name": "vencimento",
+    "scope": "global",
+    "pattern": "(?:Vencimento|Data\\s+de\\s+Vencimento)[:\\s]+(\\d{2}[\\/-]\\d{2}[\\/-]\\d{4})",
+    "capture_group": 1,
+    "normalizer": "date_iso",
+    "priority": 10,
+    "confidence_baseline": 0.91,
+    "origin": "handcrafted",
+    "comment": "Data de vencimento da conta"
+  },
+  {
+    "doc_type": "conta_luz",
+    "field_name": "consumo_kwh",
+    "scope": "global",
+    "pattern": "(?:Consumo|Consumo\\s+kWh)[:\\s]*(\\d+(?:[,.]\\d+)?)\\s*kWh",
+    "capture_group": 1,
+    "normalizer": "strip",
+    "priority": 10,
+    "confidence_baseline": 0.87,
+    "origin": "handcrafted",
+    "comment": "Consumo em kWh"
+  }
+]
